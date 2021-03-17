@@ -1,0 +1,201 @@
+﻿@model IQueryable<SmsUser>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 网站用户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/LayUI/layuiAdmin/layuiadmin/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/LayUI/layuiAdmin/layuiadmin/style/admin.css" rel="stylesheet" />
+</head>
+<body>
+    
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <table id="demo" lay-filter="LAY-user-manage"></table>
+            </div>
+        </div>
+    </div>
+        <script type="text/html" id="barRole">
+            <a class="layui-btn layui-btn-xs" lay-event="manageRole">管理角色</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="addRole">添加角色</a>
+        </script>
+        <script type="text/html" id="barClaim">
+            <a class="layui-btn layui-btn-xs" lay-event="manageClaim">管理声明</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="addClaim">添加声明</a>
+        </script>
+        <script type="text/html" id="barOper">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/LayUI/layuiAdmin/layuiadmin/layui/layui.js"></script>
+    <script type="text/javascript">
+        function layOpen(setting) {
+            var options = {
+                type: 2
+                , title: setting.title
+                , content: setting.ajaxUrl
+                , maxmin: true
+                , area: ['360px', '190px']
+                , btn: ['确定', '取消']
+                , yes: function (index, layero) {
+                    var iframeWindow = window['layui-layer-iframe' + index]
+                        , submitID = 'LAY-user-front-submit'
+                        , submit = layero.find('iframe').contents().find('#' + submitID);
+                    //监听提交
+                    iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                        var field = data.field; //获取提交的字段
+                        field.UserId = setting.id;
+
+                        //console.log("abc");
+
+                        $.ajax({
+                            url: setting.ajaxUrl,
+                            type: "post",
+                            dataType: "json",
+                            data: field,
+                            success: function (d) {
+                                layer.msg(setting.msg);
+                            }
+                        })
+
+                        layer.close(index); //关闭弹层
+                    });
+                    
+                    submit.trigger('click');
+                }
+            };
+
+            $.extend(options, setting);
+
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                //console.log(options);
+                layer.open(options);
+            });
+
+        }
+    </script>
+    <script>
+        layui.config({
+            base: '/LayUI/layuiAdmin/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['table'], function () {
+            var $ = layui.$
+                , form = layui.form
+                , table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#demo'
+                , height: 312
+                , url: '@Url.Action()' //数据接口
+                , page: true //开启分页
+                , toolbar: 'default'
+                , title: "用户表"
+                , defaultToolbar: ['filter', 'exports', {
+                    title: '提示' //标题
+                    , layEvent: 'LAYTABLE_TIPS' //事件名，用于 toolbar 事件中使用
+                    , icon: 'layui-icon-tips' //图标类名
+                }]
+                , cols: [[ //表头
+                      { type: "checkbox", title: 'ID', sort: true }
+                    , { field: 'id', title: 'ID', width:60, sort: true }
+                    , { field: 'userName', title: '用户名', edit: true }
+                    , { field: 'email', title: '邮箱' }
+                    , { field: 'emailConfirmed', title: '邮箱确认', sort: true }
+                    , { field: 'userName', title: '角色管理', templet: '#barRole' }
+                    , { field: 'userName', title: '声明管理', templet: '#barClaim' }
+                    , { field: 'userName', title: '操作', templet: '#barOper' }
+                ]]
+            });
+
+
+            //监听搜索
+            form.on('submit(LAY-user-front-search)', function (data) {
+                var field = data.field;
+
+                //执行重载
+                table.reload('LAY-user-manage', {
+                    where: field
+                });
+            });
+
+            //监听工具条
+            table.on('tool(LAY-user-manage)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var rowdata = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                if (layEvent === 'manageRole') { //查看
+                    //do somehing
+                } else if (layEvent === 'addRole') { //删除
+                    layOpen({
+                        title: "添加角色"
+                        , ajaxUrl: "@Url.Action("Create","Role")"
+                        , msg: "添加角色成功"
+                        , id: rowdata.id
+                    });
+                } else if (layEvent === 'addClaim') { //删除
+                    layOpen({
+                        title: "添加声明"
+                        , msg: "添加声明成功"
+                        , area: ['360px', '250px']
+                        , ajaxUrl: "@Url.Action("Create","Claim")"
+                        , id: rowdata.id
+                    });
+                } else if (layEvent === 'del') { //删除
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del(); //删除对Url行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                } else if (layEvent === 'edit') { //编辑
+                    //do something
+
+                    //同步更新缓存对应的值
+                    obj.update({
+                        username: '123'
+                        , title: 'xxx'
+                    });
+                } else if (layEvent === 'LAYTABLE_TIPS') {
+                    layer.alert('Hi，头部工具栏扩展的右侧图标。');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

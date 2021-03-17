@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Shop.Entity</name>
+    </assembly>
+    <members>
+        <member name="P:Shop.Entity.Entity.SmsCategory.CategoryId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsCategory.CategoryName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsCategory.ParentId">
+            <summary>
+            父分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsCategory.Depth">
+            <summary>
+            分类深度
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsCategory.ParentPath">
+            <summary>
+            分类路径
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.GoodsId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.GoodsPic">
+            <summary>
+            商品图片
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.GoodsPrice">
+            <summary>
+            商品价格
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.AddTime">
+            <summary>
+            添加时间
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.CategoryId">
+            <summary>
+            分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.SmsCategory">
+            <summary>
+            商品分类
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.MenuId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.MenuName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.ParentId">
+            <summary>
+            父分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.Depth">
+            <summary>
+            分类深度
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.ParentPath">
+            <summary>
+            分类路径
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.GoodsId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.GoodsName">
+            <summary>
+            商品名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.GoodsPic">
+            <summary>
+            商品图片
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.GoodsPrice">
+            <summary>
+            商品价格
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.AddTime">
+            <summary>
+            添加时间
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.CategoryId">
+            <summary>
+            分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.MenuId">
+            <summary>
+            商品ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.MenuName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.ParentId">
+            <summary>
+            父分类ID
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Shop.API</name>
+    </assembly>
+    <members>
+        <member name="M:Shop.API.Controllers.GoodsController.CreateAsync(Shop.Entity.ViewModel.SmsGoodsModel)">
+            <summary>
+            添加--[FromForm]实现文件Swagger上传
+            </summary>
+            <param name="smsGoods"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

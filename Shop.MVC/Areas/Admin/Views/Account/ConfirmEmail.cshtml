@@ -1,0 +1,51 @@
+﻿@model SmsLoginModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登入 - layuiAdmin</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/LayUI/layuiAdmin/layuiadmin/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/LayUI/layuiAdmin/layuiadmin/style/admin.css" rel="stylesheet" />
+    <link href="~/LayUI/layuiAdmin/layuiadmin/style/login.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+</head>
+<body>    
+    <script src="~/LayUI/layuiAdmin/layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '/LayUI/layuiadmin/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'user', 'layer'], function () {
+            var $ = layui.$
+                , setter = layui.setter
+                , admin = layui.admin
+                , form = layui.form
+                , router = layui.router()
+                , layer = layui.layer
+                , search = router.search;
+
+            //页面一打开就执行弹层
+            layer.ready(function () {
+                $.ajax({
+                    url: "@Html.Raw(ViewContext.HttpContext.Request.GetAbsoluteUri())",
+                    type: "get",
+                    dataType: "json",
+                    success: function (d) {
+                        layer.msg('很高兴一开场就见到你', function () {
+                            //alert("abcde");
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+</body>
+</html>
