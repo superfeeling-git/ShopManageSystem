@@ -1,15 +1,186 @@
-﻿
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
+﻿@model SmsSysMenuModel 
+@inject Microsoft.AspNetCore.Identity.RoleManager<SmsRole> roles;
+<!DOCTYPE html >
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <meta charset="utf-8">
+    <title>静态表格</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/LayUI/layuiAdmin/layuiadmin/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/LayUI/layuiAdmin/layuiadmin/style/admin.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="layui-card layadmin-header">
+        <div class="layui-breadcrumb" lay-filter="breadcrumb">
+            <a lay-href="">主页</a>
+            <a><cite>组件</cite></a>
+            <a><cite>静态表格</cite></a>
+        </div>
+    </div>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">默认风格</div>
+                    <div class="layui-card-body">
+                        <div id="test1"></div>
+                    </div>
+                    <div class="layui-card-header">默认风格</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="" lay-filter="component-form-group">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">分类名称</label>
+                                <div class="layui-input-block">
+                                    <input asp-for="MenuName" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">链接URL</label>
+                                <div class="layui-input-block">
+                                    <input asp-for="LinkUrl" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">左侧显示</label>
+                                <div class="layui-input-block">
+                                    <input asp-for="IsShowLeft" lay-skin="switch"  lay-text="显示|隐藏">
+                                    
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">所属角色</label>
+                                <div class="layui-input-block">
+                                    @foreach (var item in roles.Roles)
+                                    {
+                                        <input type="checkbox" title="@item.Name" value="@item.Id" name="Role" lay-skin="primary" />
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;">
+                                        <input type="hidden" asp-for="ParentId" value="0" />
+                                        <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/LayUI/layuiAdmin/layuiadmin/layui/layui.js"></script>
+    <script type="text/javascript">
+        layui.config({
+            base: '/LayUI/layuiAdmin/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'laydate', 'tree'], function () {
+            var layer = layui.layer;
+            var tree = layui.tree;
+            var form = layui.form;
+
+            var data = [];
+
+            $.ajax({
+                url: "@Url.Action("GetNodes")",
+                type: "get",
+                dataType: "json",
+                async: false,
+                success: function (d) {
+                    data = d;
+                }
+            })
+
+            //渲染
+            var inst1 = tree.render({
+                elem: '#test1'  //绑定元素
+                , data: data
+                , edit: ['add', 'update', 'del']
+                , spread: true
+                , click: function (obj) {
+                    console.log(obj.data); //得到当前点击的节点数据
+                    console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                    console.log(obj.elem); //得到当前节点元素
+
+                    console.log(obj.data.children); //当前节点下是否有子节点
+                    $("#MenuName").val(obj.data.title);
+                    $("#LinkUrl").val(obj.data.href);
+                    $("#IsShowLeft").prop("checked", true);
+                    form.render();
+                }
+                , operate: function (obj) {
+                    var type = obj.type; //得到操作类型：add、edit、del
+                    var data = obj.data; //得到当前节点的数据
+                    var elem = obj.elem; //得到当前节点元素
+
+
+                    //Ajax 操作
+                    var id = data.id; //得到节点索引
+                    if (type === 'add') { //增加节点
+                        var nid;
+                        $.ajax({
+                            url: "@Url.Action("CreateNode")",
+                            type: "post",
+                            dataType: "json",
+                            async: false,
+                            data: { MenuName: "未命名", ParentId: data.id},
+                            success: function (d) {
+                                nid = d.id;
+                            }
+                        })
+
+                        if (nid > 0) {
+                            layer.msg('添加节点成功，请修改默认的节点名称', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+
+                        return nid;
+                    } else if (type === 'update') { //修改节点
+                        $.ajax({
+                            url: "@Url.Action("UpdateNode")",
+                            type: "post",
+                            dataType: "json",
+                            data: { MenuName: data.title, MenuId: data.id },
+                            success: function (d) {
+                                if (d.code == 0) {
+                                    layer.msg('更新节点成功', {
+                                        icon: 1,
+                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                    });
+                                }
+                            }
+                        })
+                    } else if (type === 'del') { //删除节点
+                        $.ajax({
+                            url: "@Url.Action("DeleteNode")",
+                            type: "post",
+                            dataType: "json",
+                            data: { MenuId: data.id },
+                            success: function (d) {
+                                if (d.code == 0) {
+                                    layer.msg('删除节点成功', {
+                                        icon: 1,
+                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                    });
+                                }
+                            }
+                        })
+                    };
+                }
+            });
+        });
+    </script>
 </body>
 </html>

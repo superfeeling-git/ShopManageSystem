@@ -32,16 +32,9 @@ namespace Shop.API.Controllers
         /// <param name="smsGoods"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromForm]SmsGoodsModel smsGoods)
-        {
-            string filePath = Path.Combine(hostingEnvironment.WebRootPath, $"{Guid.NewGuid()}{Path.GetExtension(smsGoods.GoodsPic.FileName)}");
-            using (var stream = System.IO.File.Create(filePath))
-            {
-                await smsGoods.GoodsPic.CopyToAsync(stream);
-            }
-
+        public async Task<IActionResult> CreateAsync(SmsGoodsModel smsGoods)
+        {            
             SmsGoods goods = smsGoods.MapTo<SmsGoods>();
-            goods.GoodsPic = filePath;
             await SmsGoogdsService.CreateAsync(goods);
 
             return Ok();
@@ -93,8 +86,29 @@ namespace Shop.API.Controllers
             using (var stream = System.IO.File.Create(filePath))
             {
                 await formFile.CopyToAsync(stream);
+                await stream.FlushAsync();
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// CORE中获取路径
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetPath()
+        {
+            return Ok(new {
+                //通过IWebHostEnvironment获取当前Web根和内容根
+                AppName = hostingEnvironment.ApplicationName,
+                ContentRootPath =hostingEnvironment.ContentRootPath,
+                WebRootPath = hostingEnvironment.WebRootPath,
+                EnvironmentName = hostingEnvironment.EnvironmentName,
+                //获取当前目录
+                dir = Directory.GetCurrentDirectory(),
+                //获取DLL所在路径
+                appPath= Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath
+        });
         }
     }
 }

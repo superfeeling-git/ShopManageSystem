@@ -18,5 +18,13 @@ namespace Shop.Entity.ViewModel
         /// 父分类ID
         /// </summary>
         public int ParentId { get; set; }
+        /// <summary>
+        /// 菜单链接地址
+        /// </summary>
+        public string LinkUrl { get; set; }
+        /// <summary>
+        /// 是否左侧显示
+        /// </summary>
+        public bool IsShowLeft { get; set; }
     }
 }

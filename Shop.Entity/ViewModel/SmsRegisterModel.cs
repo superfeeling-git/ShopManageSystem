@@ -12,6 +12,7 @@ namespace Shop.Entity.ViewModel
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [DataType(DataType.Password)]
+        public string HeadPhoto { get; set; }
         public string ConfirmPassword { get; set; }
     }
 }

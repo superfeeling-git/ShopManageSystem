@@ -38,6 +38,12 @@
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
                     <input asp-for="ConfirmPassword" lay-verify="required" placeholder="确认密码" class="layui-input">
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="test8">选择文件</button>
+                        <button type="button" class="layui-btn" id="test9">开始上传</button>
+                    </div>
+                </div>
                 <div class="layui-form-item" style="margin-bottom: 20px;">
                     <input type="checkbox" name="remember" lay-skin="primary" title="记住密码">
                     <a asp-action="login" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">登 录</a>
@@ -55,16 +61,29 @@
             base: '/LayUI/layuiadmin/layuiadmin/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'user'], function () {
+        }).use(['index', 'user', 'upload'], function () {
             var $ = layui.$
                 , setter = layui.setter
                 , admin = layui.admin
                 , form = layui.form
                 , router = layui.router()
-                , search = router.search;
+                , search = router.search
+                , upload = layui.upload;
 
             form.render();
 
+            //选完文件后不自动上传
+            upload.render({
+                elem: '#test8'
+                , url: '@Url.Action("UploadHeader")' //改成您自己的上传接口
+                , auto: false
+                //,multiple: true
+                , bindAction: '#test9'
+                , done: function (res) {
+                    layer.msg('上传成功');
+                    console.log(res)
+                }
+            });
             //提交
             form.on('submit(LAY-user-login-submit)', function (obj) {
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Shop.IService;
 using Shop.IRepository;
+using Shop.Utility;
 
 namespace Shop.Service
 {
@@ -51,10 +52,10 @@ namespace Shop.Service
             await unitOfWork.SaveChangeAsync();
         }
 
-        public virtual async Task CreateAsync(TEntity entity)
+        public virtual async Task<int> CreateAsync(TEntity entity)
         {
             await baseRepository.CreateAsync(entity);
-            await unitOfWork.SaveChangeAsync();
+            return await unitOfWork.SaveChangeAsync();
         }
 
         public virtual async Task DeleteAsync(TEntity entity)
@@ -85,7 +86,7 @@ namespace Shop.Service
             return await baseRepository.Find(expression);
         }
 
-        public async Task<List<TEntity>> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
             return await baseRepository.GetAll();
         }
@@ -95,7 +96,7 @@ namespace Shop.Service
             return await baseRepository.GetList(expression);
         }
 
-        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
         {
             return await baseRepository.IsExist(expression);
         }

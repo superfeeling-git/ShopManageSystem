@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shop.Entity;
 
 namespace Shop.Entity.Migrations
 {
     [DbContext(typeof(SmsDBContext))]
-    partial class SmsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210401011224_20210401-1")]
+    partial class _202104011
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

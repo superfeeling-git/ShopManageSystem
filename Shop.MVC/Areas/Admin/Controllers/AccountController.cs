@@ -17,6 +17,12 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Shop.Utility;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using Hei.Captcha;
 
 namespace Shop.MVC.Areas.Admin.Controllers
 {
@@ -34,13 +40,19 @@ namespace Shop.MVC.Areas.Admin.Controllers
 
         private IEmailSender EmailSender;
 
+        private IWebHostEnvironment webHostEnvironment;
+
+        //private SecurityCodeHelper codeHelper = new SecurityCodeHelper();
+
         public AccountController
         (
             UserManager<SmsUser> _userManager,
             SignInManager<SmsUser> _signInManager,
             ILogger<AccountController> _logger,
             RoleManager<SmsRole> _roleManager,
-            IEmailSender _EmailSender
+            IEmailSender _EmailSender,
+            IWebHostEnvironment _webHostEnvironment
+            //SecurityCodeHelper _codeHelper
         )
         {
             this.userManager = _userManager;
@@ -48,6 +60,8 @@ namespace Shop.MVC.Areas.Admin.Controllers
             this.logger = _logger;
             this.roleManager = _roleManager;
             this.EmailSender = _EmailSender;
+            this.webHostEnvironment = _webHostEnvironment;
+            //this.codeHelper = _codeHelper;
         }
 
 
@@ -59,6 +73,52 @@ namespace Shop.MVC.Areas.Admin.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GenerCode()
+        {
+            Bitmap bitmap = new Bitmap(6 * 15, 24);
+
+            Graphics graphics = Graphics.FromImage(bitmap);
+
+            graphics.Clear(Color.White);
+
+            ValidateCode validateCode = new ValidateCode();
+
+            Font font = new Font("微软雅黑", 12, FontStyle.Bold | FontStyle.Italic);
+
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+
+            LinearGradientBrush linearGradientBrush = new LinearGradientBrush(rectangle, Color.Red, Color.Blue, 30);
+
+            //SolidBrush brush = new SolidBrush(Color.Red);
+
+            string validatecode = validateCode.GeneralCode();
+
+            Response.Cookies.Append("code", validatecode);
+
+            graphics.DrawString(validatecode, font, linearGradientBrush, rectangle);
+
+            Random random = new Random(unchecked((int)DateTime.Now.Ticks));
+
+            //画线
+            for (int i = 0; i < 20; i++)
+            {
+                graphics.DrawLine(new Pen(Color.FromArgb(100, 0, 0, 255)), random.Next(bitmap.Width), random.Next(bitmap.Height), random.Next(bitmap.Width), random.Next(bitmap.Height));
+            }
+
+            MemoryStream memoryStream = new MemoryStream();
+
+            bitmap.Save(memoryStream, ImageFormat.Jpeg);
+
+            //var imgbyte = codeHelper.GetBubbleCodeByte(validatecode);
+
+            return File(memoryStream.ToArray(),"image/jpeg");
         }
 
         /// <summary>
@@ -205,6 +265,30 @@ namespace Shop.MVC.Areas.Admin.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UploadHeaderAsync(List<IFormFile> file)
+        {
+            long size = file.Sum(f => f.Length);
+
+            foreach (var formFile in file)
+            {
+                if (formFile.Length > 0)
+                {
+                    var filePath = Path.Combine(webHostEnvironment.WebRootPath,"UploadFile",formFile.FileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await formFile.CopyToAsync(stream);
+                        await stream.FlushAsync();
+                    }                    
+                }
+            }
+
+            // Process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+
+            return Ok(new {code = 0, count = file.Count, size });
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -213,6 +297,37 @@ namespace Shop.MVC.Areas.Admin.Controllers
         public ActionResult AccessDenied()
         {
             return View();
+        }
+    }
+
+    public class ValidateCode
+    {
+        /// <summary>
+        /// 生成随机串
+        /// </summary>
+        /// <returns></returns>
+        public string GeneralCode()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (int i = 48; i <= 90; i++)
+            {
+                if (i < 58 || i > 64)
+                    stringBuilder.Append((char)i);
+            }
+
+            Random random = new Random(unchecked((int)DateTime.Now.Ticks));
+
+            string code = stringBuilder.ToString();
+
+            char[] char_code = new char[6];
+
+            for (int i = 0; i < 6; i++)
+            {
+                char_code[i] = code[random.Next(0, code.Length)];
+            }
+
+            return string.Join("", char_code);
         }
     }
 }

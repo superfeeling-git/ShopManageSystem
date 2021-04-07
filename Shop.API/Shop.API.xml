@@ -4,11 +4,29 @@
         <name>Shop.API</name>
     </assembly>
     <members>
+        <member name="M:Shop.API.Controllers.AccountController.GenerCode">
+            <summary>
+            生成验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Shop.API.Controllers.ValidateCode.GeneralCode">
+            <summary>
+            生成随机串
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Shop.API.Controllers.GoodsController.CreateAsync(Shop.Entity.ViewModel.SmsGoodsModel)">
             <summary>
             添加--[FromForm]实现文件Swagger上传
             </summary>
             <param name="smsGoods"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Shop.API.Controllers.GoodsController.GetPath">
+            <summary>
+            CORE中获取路径
+            </summary>
             <returns></returns>
         </member>
     </members>

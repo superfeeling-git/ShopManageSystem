@@ -16,7 +16,7 @@ namespace Shop.IService
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task CreateAsync(TEntity entity);
+        Task<int> CreateAsync(TEntity entity);
         #endregion
 
         #region 批量添加

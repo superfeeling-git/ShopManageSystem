@@ -16,6 +16,7 @@ namespace Shop.Entity
 
         }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -45,11 +46,12 @@ namespace Shop.Entity
             builder.Entity<SmsGoods>(action => {
                 //主键
                 action.HasKey(m => m.GoodsId);
-                action.Property(m => m.GoodsId).HasColumnType("bigint");
+                action.Property(m => m.GoodsId).HasColumnType("bigint").HasComment("注释信息：商品ID");
                 action.Property(m => m.GoodsName).HasMaxLength(50).IsRequired();
                 action.Property(m => m.GoodsPrice).HasColumnType("money");
                 action.Property(m => m.GoodsPic).HasMaxLength(500);
                 action.Property(m => m.AddTime).HasDefaultValueSql("getdate()");
+
                 //外键
                 action.HasOne<SmsCategory>(m => m.SmsCategory).WithMany(m => m.SmsGoods).HasForeignKey(m => m.CategoryId);
             });
@@ -58,7 +60,6 @@ namespace Shop.Entity
                 option.HasKey(m => m.MenuId);
                 option.Property(m => m.MenuName).HasMaxLength(50).IsRequired();
                 option.Property(m => m.ParentId).IsRequired();
-                option.Property(m => m.ParentPath).HasMaxLength(50).IsRequired();
             });
         }
 

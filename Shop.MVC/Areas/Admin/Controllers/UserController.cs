@@ -31,7 +31,7 @@ namespace Shop.MVC.Areas.Admin.Controllers
             if(Request.IsAjax())
             {
                 int pageSize = 10;
-                return Json(new {code = 0,count = userManager.Users.Count(),data= userManager.Users.Skip((page - 1) * pageSize).Take(pageSize) });
+                return Json(new {code = 0,count = userManager.Users.Count(),data= userManager.Users.OrderBy(m => m.Id).Skip((page - 1) * pageSize).Take(pageSize) });
             }
             return View();
         }

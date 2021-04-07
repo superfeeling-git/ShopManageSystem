@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Autofac;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Shop.API
 {
@@ -45,11 +46,38 @@ namespace Shop.API
                 //修改时间的序列化方式
                 options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy/MM/dd HH:mm:ss" });
             
-            }); 
+            });
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddSession(
+                options => {
+                    options.Cookie.Name = ".AdventureWorks.Session";
+                    options.IdleTimeout = TimeSpan.FromSeconds(100);
+                    options.Cookie.HttpOnly = true;
+                    // Make the session cookie essential
+                    options.Cookie.IsEssential = true;
+                }
+            );
 
             //数据库连接
             services.AddDbContext<SmsDBContext>(action => {
                 action.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+
+            services.AddCors(option => {
+                option.AddDefaultPolicy(policy => {
+                    policy.AllowAnyOrigin();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyHeader();
+                });
             });
 
             //添加Identity
@@ -111,13 +139,21 @@ namespace Shop.API
                 c.RoutePrefix = "";
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
+
+            //app.UseOptionsMiddleware();
+
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

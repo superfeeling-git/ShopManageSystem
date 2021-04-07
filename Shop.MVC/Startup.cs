@@ -25,6 +25,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Shop.MVC.Mock;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Shop.IService;
+using Shop.Service;
+using Shop.Repository;
+using Shop.IRepository;
 
 namespace Shop.MVC
 {
@@ -120,8 +124,14 @@ namespace Shop.MVC
 
             services.AddTransient<IPolicyData, PolicyData>();
 
+            services.AddTransient<ISmsSysMenuService, SmsSysMenuService>();
 
-            services.AddSingleton<IAuthorizationHandler, CustomAuthorize>();
+            services.AddTransient<ISmsSysMenuRepository, SmsSysMenuRepository>();
+
+            services.AddTransient<IAuthorizationHandler, CustomAuthorize>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
             //services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
         }
 
@@ -187,7 +197,7 @@ namespace Shop.MVC
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var actionDescriptor = (Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor)context.ActionDescriptor;
-
+            var user = context.HttpContext.User;
         }
     }
 }

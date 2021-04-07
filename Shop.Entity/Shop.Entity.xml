@@ -79,14 +79,14 @@
             父分类ID
             </summary>
         </member>
-        <member name="P:Shop.Entity.Entity.SmsSysMenu.Depth">
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.LinkUrl">
             <summary>
-            分类深度
+            菜单链接地址
             </summary>
         </member>
-        <member name="P:Shop.Entity.Entity.SmsSysMenu.ParentPath">
+        <member name="P:Shop.Entity.Entity.SmsSysMenu.IsShowLeft">
             <summary>
-            分类路径
+            是否左侧显示
             </summary>
         </member>
         <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.GoodsId">
@@ -132,6 +132,16 @@
         <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.ParentId">
             <summary>
             父分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.LinkUrl">
+            <summary>
+            菜单链接地址
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.IsShowLeft">
+            <summary>
+            是否左侧显示
             </summary>
         </member>
     </members>

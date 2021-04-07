@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hei.Captcha" Version="0.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
@@ -37,6 +38,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shop.Entity\Shop.Entity.csproj" />
+    <ProjectReference Include="..\Shop.IRepository\Shop.IRepository.csproj" />
+    <ProjectReference Include="..\Shop.IService\Shop.IService.csproj" />
+    <ProjectReference Include="..\Shop.Repository\Shop.Repository.csproj" />
+    <ProjectReference Include="..\Shop.Service\Shop.Service.csproj" />
     <ProjectReference Include="..\Shop.Utility\Shop.Utility.csproj" />
   </ItemGroup>
 

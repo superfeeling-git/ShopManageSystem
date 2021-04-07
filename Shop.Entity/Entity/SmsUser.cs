@@ -9,5 +9,6 @@ namespace Shop.Entity.Entity
     public class SmsUser : IdentityUser<long>
     {
         public string NickName { get; set; }
+        public string HeadPhoto { get; set; }
     }
 }

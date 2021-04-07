@@ -18,7 +18,7 @@ namespace Shop.Entity.ViewModel
         /// <summary>
         /// 商品图片
         /// </summary>
-        public IFormFile GoodsPic { get; set; }
+        public string GoodsPic { get; set; }
         /// <summary>
         /// 商品价格
         /// </summary>

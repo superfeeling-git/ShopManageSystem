@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Shop.Entity.Entity
@@ -9,6 +10,7 @@ namespace Shop.Entity.Entity
         /// <summary>
         /// 商品ID
         /// </summary>
+        [Key]
         public int MenuId { get; set; }
         /// <summary>
         /// 分类名称
@@ -19,12 +21,12 @@ namespace Shop.Entity.Entity
         /// </summary>
         public int ParentId { get; set; }
         /// <summary>
-        /// 分类深度
+        /// 菜单链接地址
         /// </summary>
-        public int Depth { get; set; }
+        public string LinkUrl { get; set; }
         /// <summary>
-        /// 分类路径
+        /// 是否左侧显示
         /// </summary>
-        public string ParentPath { get; set; }
+        public bool IsShowLeft { get; set; }
     }
 }

@@ -48,5 +48,16 @@ namespace Shop.MVC.Areas.Admin.Controllers
             await signInManager.SignOutAsync();
             return Json(new { });
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }
