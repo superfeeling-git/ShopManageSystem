@@ -9,11 +9,13 @@ using Shop.IService;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Shop.Entity.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Shop.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class GoodsController : ControllerBase
     {
         private ISmsGoogdsService SmsGoogdsService;

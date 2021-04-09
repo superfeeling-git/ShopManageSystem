@@ -20,6 +20,12 @@ using Autofac;
 using Microsoft.OpenApi.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Shop.API
 {
@@ -38,43 +44,29 @@ namespace Shop.API
         public void ConfigureServices(IServiceCollection services)
         {
             object p = services.AddControllers()
-                //添加JSON序列化编码，防止中文被编码为Unicode字符。
-                .AddNewtonsoftJson(options => {
+            //添加JSON序列化编码，防止中文被编码为Unicode字符。
+            .AddNewtonsoftJson(options => {
                 //修改属性名称的序列化方式，首字母小写
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
                 //修改时间的序列化方式
                 options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy/MM/dd HH:mm:ss" });
-            
             });
+              
 
             services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
-            services.AddSession(
-                options => {
-                    options.Cookie.Name = ".AdventureWorks.Session";
-                    options.IdleTimeout = TimeSpan.FromSeconds(100);
-                    options.Cookie.HttpOnly = true;
-                    // Make the session cookie essential
-                    options.Cookie.IsEssential = true;
-                }
-            );
 
             //数据库连接
             services.AddDbContext<SmsDBContext>(action => {
                 action.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
-            services.AddCors(option => {
-                option.AddDefaultPolicy(policy => {
-                    policy.AllowAnyOrigin();
+            services.AddCors(option =>
+            {
+                option.AddDefaultPolicy(policy =>
+                {
+                    //对应客户端withCredentials，需要设置具体允许的域名
+                    policy.WithOrigins("http://web.a.com:81").AllowCredentials();
                     policy.AllowAnyMethod();
                     policy.AllowAnyHeader();
                 });
@@ -93,10 +85,39 @@ namespace Shop.API
                 options.Password.RequireDigit = false;
             });
 
+            services.AddAuthentication(option => {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(
+                option => {
+                    option.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        //是否验证发行人
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Authentication:JwtBearer:Issuer"],//发行人
+
+                        //是否验证受众人
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Authentication:JwtBearer:Audience"],//受众人
+
+                        //是否验证密钥
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtBearer:SecurityKey"])),
+
+                        ValidateLifetime = true, //验证生命周期
+
+                        RequireExpirationTime = true, //过期时间
+
+                        ClockSkew = TimeSpan.Zero   //平滑过期偏移时间
+                    };
+                }
+            );
+
+
             var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("V1", new OpenApiInfo
+                options.SwaggerDoc("V1", new OpenApiInfo
                 {
                     // {ApiName} 定义成全局变量，方便修改
                     Version = "V1",
@@ -105,15 +126,29 @@ namespace Shop.API
                     Contact = new OpenApiContact { Name = ApiName, Email = "Shop.Core@xxx.com", Url = new Uri("https://www.jianshu.com/u/94102b59cc2a") },
                     License = new OpenApiLicense { Name = ApiName, Url = new Uri("https://www.jianshu.com/u/94102b59cc2a") }
                 });
-                c.OrderActionsBy(o => o.RelativePath);
+                options.OrderActionsBy(o => o.RelativePath);
 
                 //就是这里！！！！！！！！！
                 var xmlPath = Path.Combine(basePath, "Shop.API.xml");//这个就是刚刚配置的xml文件名
-                c.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
+                options.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
 
                 //就是这里！！！！！！！！！
                 var xmlPath_Entity = Path.Combine(basePath, "Shop.Entity.xml");//这个就是刚刚配置的xml文件名
-                c.IncludeXmlComments(xmlPath_Entity, true);//默认的第二个参数是false，这个是controller的注释，记得修改
+                options.IncludeXmlComments(xmlPath_Entity, true);//默认的第二个参数是false，这个是controller的注释，记得修改
+
+                //开启权限小锁
+                options.OperationFilter<AddResponseHeadersFilter>();
+                options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+
+                //在header中添加token，传递到后台
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传递)直接在下面框中输入Bearer {token}(注意两者之间是一个空格) \"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
         }
 
@@ -145,15 +180,11 @@ namespace Shop.API
 
             app.UseCors();
 
-            //app.UseOptionsMiddleware();
-
             app.UseCookiePolicy();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

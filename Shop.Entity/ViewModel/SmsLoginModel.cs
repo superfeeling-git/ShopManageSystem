@@ -14,6 +14,11 @@ namespace Shop.Entity.ViewModel
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string ValidateCode { get; set; }
-        public bool Remember { get; set; }
+        public bool Remember { get; set; }        
+    }
+
+    public class TokenModel
+    {
+        public string Token { get; set; }
     }
 }

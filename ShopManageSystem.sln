@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Entity", "Shop.Entity\Shop.Entity.csproj", "{58FF90F1-7435-49C7-909F-88586A8D9A24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Entity", "Shop.Entity\Shop.Entity.csproj", "{58FF90F1-7435-49C7-909F-88586A8D9A24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.IRepository", "Shop.IRepository\Shop.IRepository.csproj", "{5E433783-931F-486E-AB87-B8DC8B6B3A97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.IRepository", "Shop.IRepository\Shop.IRepository.csproj", "{5E433783-931F-486E-AB87-B8DC8B6B3A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Repository", "Shop.Repository\Shop.Repository.csproj", "{3EC60E31-6E65-402D-AB31-A6044C2D0A21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Repository", "Shop.Repository\Shop.Repository.csproj", "{3EC60E31-6E65-402D-AB31-A6044C2D0A21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.IService", "Shop.IService\Shop.IService.csproj", "{6161219D-BF85-4E65-A327-C4DF6EC30EB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.IService", "Shop.IService\Shop.IService.csproj", "{6161219D-BF85-4E65-A327-C4DF6EC30EB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Service", "Shop.Service\Shop.Service.csproj", "{EF49B748-F687-4744-B99D-79F1DEB99DAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Service", "Shop.Service\Shop.Service.csproj", "{EF49B748-F687-4744-B99D-79F1DEB99DAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Utility", "Shop.Utility\Shop.Utility.csproj", "{C987EF42-3DB6-4431-BF83-AECBEC6C472F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Utility", "Shop.Utility\Shop.Utility.csproj", "{C987EF42-3DB6-4431-BF83-AECBEC6C472F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.API", "Shop.API\Shop.API.csproj", "{82178228-9031-4C8B-9BDB-AD09F49BD7C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.API", "Shop.API\Shop.API.csproj", "{82178228-9031-4C8B-9BDB-AD09F49BD7C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.MVC", "Shop.MVC\Shop.MVC.csproj", "{648DC0AB-49E8-44FB-8FB7-E66EE145EF89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.MVC", "Shop.MVC\Shop.MVC.csproj", "{888FE362-BAAA-450B-B142-D2E9B941758D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{82178228-9031-4C8B-9BDB-AD09F49BD7C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82178228-9031-4C8B-9BDB-AD09F49BD7C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82178228-9031-4C8B-9BDB-AD09F49BD7C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{648DC0AB-49E8-44FB-8FB7-E66EE145EF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{648DC0AB-49E8-44FB-8FB7-E66EE145EF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{648DC0AB-49E8-44FB-8FB7-E66EE145EF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{648DC0AB-49E8-44FB-8FB7-E66EE145EF89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{888FE362-BAAA-450B-B142-D2E9B941758D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{888FE362-BAAA-450B-B142-D2E9B941758D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{888FE362-BAAA-450B-B142-D2E9B941758D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{888FE362-BAAA-450B-B142-D2E9B941758D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
