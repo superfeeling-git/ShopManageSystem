@@ -26,5 +26,9 @@ namespace Shop.Entity.ViewModel
         /// 是否左侧显示
         /// </summary>
         public bool IsShowLeft { get; set; }
+        /// <summary>
+        /// 子级
+        /// </summary>
+        public List<SmsSysMenuModel> SmsSysMenuModels { get; set; }
     }
 }

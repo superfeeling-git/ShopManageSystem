@@ -112,5 +112,37 @@ namespace Shop.API.Controllers
                 appPath= Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath
         });
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
+            return new JsonResult(new List<SmsSysMenuModel> { 
+                new SmsSysMenuModel
+                { 
+                    MenuName = "商品管理", 
+                    SmsSysMenuModels = new List<SmsSysMenuModel>
+                    {
+                    new SmsSysMenuModel{MenuName = "商品管理", LinkUrl = "Goods/List"},
+                    new SmsSysMenuModel{MenuName = "商品添加", LinkUrl = "Goods/Create"},
+                    new SmsSysMenuModel{MenuName = "商品编辑", LinkUrl = "Goods/Edit"},
+                    }                
+                },
+                new SmsSysMenuModel
+                {
+                    MenuName = "角色管理",
+                    SmsSysMenuModels = new List<SmsSysMenuModel>
+                    {
+                    new SmsSysMenuModel{MenuName = "角色管理", LinkUrl = "Role/List"},
+                    new SmsSysMenuModel{MenuName = "角色添加", LinkUrl = "Role/Create"},
+                    new SmsSysMenuModel{MenuName = "角色编辑", LinkUrl = "Role/Edit"},
+                    }
+                }
+            });
+        }
     }
 }

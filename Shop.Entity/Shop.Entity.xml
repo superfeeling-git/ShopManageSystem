@@ -144,5 +144,10 @@
             是否左侧显示
             </summary>
         </member>
+        <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.SmsSysMenuModels">
+            <summary>
+            子级
+            </summary>
+        </member>
     </members>
 </doc>
