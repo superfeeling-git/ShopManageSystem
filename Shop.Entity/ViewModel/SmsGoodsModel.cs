@@ -31,5 +31,17 @@ namespace Shop.Entity.ViewModel
         /// 分类ID
         /// </summary>
         public int CategoryId { get; set; }
+        /// <summary>
+        /// 商品介绍
+        /// </summary>
+        public string Content { get; set; }
+        /// <summary>
+        /// 分类名称
+        /// </summary>
+        public string CategoryName { get; set; }
+        /// <summary>
+        /// 分类路径
+        /// </summary>
+        public int[] CategoryPath { get; set; }
     }
 }

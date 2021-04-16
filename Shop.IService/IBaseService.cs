@@ -37,6 +37,14 @@ namespace Shop.IService
         Task UpdateAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TEntity>> expression1);
         #endregion
 
+        #region 更新实体
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        Task<int> UpdateAsync(TEntity entity);
+        #endregion
+
         #region 批量更新
         /// <summary>
         /// 批量更新

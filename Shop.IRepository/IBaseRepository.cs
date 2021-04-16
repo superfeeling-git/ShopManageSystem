@@ -38,6 +38,14 @@ namespace Shop.IRepository
         Task UpdateAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TEntity>> exception);
         #endregion
 
+        #region 更新实体
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        void UpdateAsync(TEntity entity);
+        #endregion
+
         #region 批量更新
         /// <summary>
         /// 批量更新
@@ -143,6 +151,18 @@ namespace Shop.IRepository
         /// <param name="expression"></param>
         /// <returns></returns>
         Task<bool> IsExist(Expression<Func<TEntity, bool>> expression);
+        #endregion
+
+        #region 获取分页数据
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="PageIndex"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        Task<Tuple<IList<TEntity>, int>> GetPageAsync(Func<TEntity, Tkey> keySelector, int PageSize = 10, int PageIndex = 1, params Expression<Func<TEntity, bool>>[] where);
         #endregion
     }
 }

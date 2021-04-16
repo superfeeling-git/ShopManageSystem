@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Shop.MVC.Controllers
 {
-    [Authorize("Custom")]
+    [AllowAnonymous]
     public class TestController : Controller
     {
         public IActionResult Index()

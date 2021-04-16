@@ -30,7 +30,7 @@ namespace Shop.Service
             {
                 TreeModel model = new TreeModel { title = item.MenuName, id = item.MenuId, href = item.LinkUrl };
 
-                SubNodeData(model,MenuList);
+                await SubNodeDataAsync(model,MenuList);
 
                 treeModels.Add(model);
             }
@@ -38,7 +38,7 @@ namespace Shop.Service
             return treeModels;
         }
 
-        private void SubNodeData(TreeModel model, List<SmsSysMenu> AllList)
+        private async Task SubNodeDataAsync(TreeModel model, List<SmsSysMenu> AllList)
         {
             foreach (var item in AllList.Where(m => m.ParentId == model.id))
             {
@@ -46,7 +46,7 @@ namespace Shop.Service
 
                 model.children.Add(subNode);
 
-                SubNodeData(subNode, AllList);
+                await SubNodeDataAsync(subNode, AllList);
             }
         }
     }

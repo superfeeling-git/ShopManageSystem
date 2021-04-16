@@ -26,6 +26,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.Extensions.FileProviders;
 
 namespace Shop.API
 {
@@ -48,6 +49,10 @@ namespace Shop.API
             .AddNewtonsoftJson(options => {
                 //修改属性名称的序列化方式，首字母小写
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
 
                 //修改时间的序列化方式
                 options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy/MM/dd HH:mm:ss" });
@@ -175,6 +180,11 @@ namespace Shop.API
             });
 
             //app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+            });
 
             app.UseRouting();
 

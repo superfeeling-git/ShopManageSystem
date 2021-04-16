@@ -106,5 +106,11 @@ namespace Shop.Service
             await baseRepository.UpdateAsync(expression, exception);
             await unitOfWork.SaveChangeAsync();
         }
+
+        public async Task<int> UpdateAsync(TEntity entity)
+        {
+            baseRepository.UpdateAsync(entity);
+            return await unitOfWork.SaveChangeAsync();
+        }
     }
 }

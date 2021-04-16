@@ -94,7 +94,7 @@ namespace Shop.API.Controllers
                         var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                         //过期时间
-                        DateTime expires = DateTime.UtcNow.AddSeconds(10);
+                        DateTime expires = DateTime.UtcNow.AddMinutes(10);
 
                         var token = new JwtSecurityToken(
                             issuer: Configuration["Authentication:JwtBearer:Issuer"],
@@ -155,7 +155,7 @@ namespace Shop.API.Controllers
                 var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 //过期时间
-                DateTime expires = DateTime.UtcNow.AddSeconds(10);
+                DateTime expires = DateTime.UtcNow.AddMinutes(10);
 
                 var token = new JwtSecurityToken
                     (

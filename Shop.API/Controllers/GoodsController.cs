@@ -37,9 +37,9 @@ namespace Shop.API.Controllers
         public async Task<IActionResult> CreateAsync(SmsGoodsModel smsGoods)
         {            
             SmsGoods goods = smsGoods.MapTo<SmsGoods>();
-            await SmsGoogdsService.CreateAsync(goods);
+            int result = await SmsGoogdsService.CreateAsync(goods);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPost]
@@ -50,29 +50,54 @@ namespace Shop.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateAsync()
+        public async Task<IActionResult> UpdateAsync(SmsGoodsModel smsGoods)
         {
-            await SmsGoogdsService.UpdateAsync(m => m.GoodsId == 1, m => new SmsGoods { GoodsName = "品牌电视" });
+            SmsGoods goods = smsGoods.MapTo<SmsGoods>();
             
+            return Ok(await SmsGoogdsService.UpdateAsync(goods));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await SmsGoogdsService.DeleteAsync(id);
+            return Ok();
+        }
+
+        public class idList
+        {
+            public long[] id { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BatchDelete(idList id)
+        {
+            await SmsGoogdsService.BatchDeleteAsync(id.id);
             return Ok();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
             return Ok(await SmsGoogdsService.Find(id));
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             return Ok(await SmsGoogdsService.GetAll());
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetList()
+        public async Task<IActionResult> GetListAsync()
         {
             return Ok(await SmsGoogdsService.GetList(m => m.GoodsName.Contains("视")));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPageAsync(string GoodsName, int? CategoryId, int PageIndex = 1)
+        {
+            return new JsonResult(await SmsGoogdsService.GetPage(m => m.GoodsId, GoodsName, CategoryId, PageIndex: PageIndex));
         }
 
         [HttpGet]
@@ -82,15 +107,17 @@ namespace Shop.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> UploadFileAsync(IFormFile formFile)
         {
-            string filePath = Path.Combine(hostingEnvironment.ContentRootPath, $"{Guid.NewGuid()}{Path.GetExtension(formFile.FileName)}");
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(formFile.FileName)}";
+            string filePath = Path.Combine(hostingEnvironment.WebRootPath, fileName);
             using (var stream = System.IO.File.Create(filePath))
             {
                 await formFile.CopyToAsync(stream);
                 await stream.FlushAsync();
             }
-            return Ok();
+            return Ok(new { response="200", file = fileName });
         }
 
         /// <summary>

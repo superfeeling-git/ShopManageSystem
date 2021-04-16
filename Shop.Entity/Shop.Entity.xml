@@ -59,6 +59,11 @@
             分类ID
             </summary>
         </member>
+        <member name="P:Shop.Entity.Entity.SmsGoods.Content">
+            <summary>
+            商品介绍
+            </summary>
+        </member>
         <member name="P:Shop.Entity.Entity.SmsGoods.SmsCategory">
             <summary>
             商品分类
@@ -117,6 +122,21 @@
         <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.CategoryId">
             <summary>
             分类ID
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.Content">
+            <summary>
+            商品介绍
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.CategoryName">
+            <summary>
+            分类名称
+            </summary>
+        </member>
+        <member name="P:Shop.Entity.ViewModel.SmsGoodsModel.CategoryPath">
+            <summary>
+            分类路径
             </summary>
         </member>
         <member name="P:Shop.Entity.ViewModel.SmsSysMenuModel.MenuId">

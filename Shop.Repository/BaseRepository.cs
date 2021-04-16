@@ -24,79 +24,123 @@ namespace Shop.Repository
             this.SmsDBContext = _SmsDBContext;
         }
 
-        public async Task BatchCreateAsync(List<TEntity> entities)
+        public virtual async Task BatchCreateAsync(List<TEntity> entities)
         {
             await SmsDBContext.Set<TEntity>().AddRangeAsync(entities);
         }
 
-        public async Task BatchDeleteAsync(List<TEntity> entities)
+        public virtual async Task BatchDeleteAsync(List<TEntity> entities)
         {
             await SmsDBContext.Set<TEntity>().DeleteRangeByKeyAsync(entities);
         }
 
-        public async Task BatchDeleteAsync(TKey[] tkeys)
+        public virtual async Task BatchDeleteAsync(TKey[] tkeys)
         {
             await SmsDBContext.Set<TEntity>().DeleteByKeyAsync<TEntity>(tkeys);
         }
 
-        public async Task BatchDeleteAsync(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task BatchDeleteAsync(Expression<Func<TEntity, bool>> expression)
         {
             await SmsDBContext.Set<TEntity>().Where(expression).DeleteFromQueryAsync();
         }
 
-        public async Task BatchUpdateAsync(List<TEntity> entities)
+        public virtual async Task BatchUpdateAsync(List<TEntity> entities)
         {
             await SmsDBContext.Set<TEntity>().BulkUpdateAsync(entities);
         }
 
-        public async Task CreateAsync(TEntity entity)
+        public virtual async Task CreateAsync(TEntity entity)
         {
             await SmsDBContext.Set<TEntity>().AddAsync(entity);
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TEntity entity)
         {
             await SmsDBContext.Set<TEntity>().SingleDeleteAsync(entity);
         }
 
-        public async Task DeleteAsync(TKey tkey)
+        public virtual async Task DeleteAsync(TKey tkey)
         {
             await SmsDBContext.Set<TEntity>().DeleteByKeyAsync(tkey);
         }
 
-        public async Task DeleteAsync(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> expression)
         {
             await SmsDBContext.Set<TEntity>().Where(expression).DeleteFromQueryAsync<TEntity>();
         }
 
-        public async Task<TEntity> Find(TKey tkey)
+        public virtual async Task<TEntity> Find(TKey tkey)
         {
             return await SmsDBContext.Set<TEntity>().FindAsync(tkey);
         }
 
-        public async Task<TEntity> Find(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task<TEntity> Find(Expression<Func<TEntity, bool>> expression)
         {
             return await SmsDBContext.Set<TEntity>().FirstOrDefaultAsync(expression);
         }
 
-        public async Task<List<TEntity>> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
             return await SmsDBContext.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> expression)
         {
             return await SmsDBContext.Set<TEntity>().Where(expression).ToListAsync();
         }
 
-        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
         {
             return await SmsDBContext.Set<TEntity>().AnyAsync(expression);
         }
 
-        public async Task UpdateAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TEntity>> exception)
+        public virtual async Task UpdateAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, TEntity>> exception)
         {
             await SmsDBContext.Set<TEntity>().Where(expression).UpdateFromQueryAsync(exception);
+        }
+
+        public virtual void UpdateAsync(TEntity entity)
+        {
+            SmsDBContext.Entry<TEntity>(entity).State = EntityState.Modified;
+        }
+
+        public virtual async Task<Tuple<IList<TEntity>, int>> GetPageAsync(Func<TEntity, TKey> keySelector ,int PageSize = 10,int PageIndex = 1, params Expression<Func<TEntity, bool>>[] where)
+        {
+            var list = SmsDBContext.Set<TEntity>().AsQueryable();
+
+            foreach (var item in where)
+            {
+                if(item.Body.NodeType == ExpressionType.Call)
+                {
+                    MethodCallExpression methodCallExpression = (MethodCallExpression)item.Body;
+                    ConstantExpression constantExpression = (ConstantExpression)methodCallExpression.Arguments[0];
+                    if(constantExpression.Value != null)
+                    {
+                        list = list.Where(item);
+                    }
+                }
+                else
+                {
+                    BinaryExpression expression = item.Body as BinaryExpression;
+
+                    ConstantExpression rightValue = expression.Right as ConstantExpression;
+
+                    if (rightValue.Value != null)
+                    {
+                        list = list.Where(item);
+                    }
+                }
+            }
+
+
+
+            Tuple<IList<TEntity>, int> tuple = new Tuple<IList<TEntity>, int>
+            (
+            item1: list.OrderBy(keySelector).Skip((PageIndex - 1) * PageSize).Take(PageSize).ToList(),
+            item2: await list.CountAsync()
+            );
+
+            return tuple;
         }
     }
 }

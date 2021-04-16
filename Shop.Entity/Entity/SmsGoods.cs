@@ -32,6 +32,10 @@ namespace Shop.Entity.Entity
         /// </summary>
         public int CategoryId { get; set; }
         /// <summary>
+        /// 商品介绍
+        /// </summary>
+        public string Content { get; set; }
+        /// <summary>
         /// 商品分类
         /// </summary>
         public SmsCategory SmsCategory { get; set; }
